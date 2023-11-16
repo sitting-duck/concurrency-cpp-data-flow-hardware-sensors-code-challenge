@@ -3,27 +3,28 @@
 
 #include <string>
 #include <vector>
+#include "Constant.h"
 
 class Packet {
 public:
     Packet(const std::string& uuid, long long timestamp,
-           const std::vector<std::vector<float>>& magneticSamples,
-           const std::vector<std::vector<float>>& accelerometerSamples,
-           const std::vector<std::vector<float>>& gyroscopeSamples);
+           const std::vector<std::array<float, numValuesPerSample>>& magneticSamples,
+           const std::vector<std::array<float, numValuesPerSample>>& accelerometerSamples,
+           const std::vector<std::array<float, numValuesPerSample>>& gyroscopeSamples);
 
     // Getters
     std::string getUUID() const;
     long long getTimestamp() const;
-    const std::vector<std::vector<float>>& getMagneticSamples() const;
-    const std::vector<std::vector<float>>& getAccelerometerSamples() const;
-    const std::vector<std::vector<float>>& getGyroscopeSamples() const;
+    const std::vector<std::array<float, numValuesPerSample>>& getMagneticSamples() const;
+    const std::vector<std::array<float, numValuesPerSample>>& getAccelerometerSamples() const;
+    const std::vector<std::array<float, numValuesPerSample>>& getGyroscopeSamples() const;
 
 private:
     std::string uuid;
     long long timestamp;
-    std::vector<std::vector<float>> magneticSamples;
-    std::vector<std::vector<float>> accelerometerSamples;
-    std::vector<std::vector<float>> gyroscopeSamples;
+    std::vector<std::array<float, numValuesPerSample>> magneticSamples;
+    std::vector<std::array<float, numValuesPerSample>> accelerometerSamples;
+    std::vector<std::array<float, numValuesPerSample>> gyroscopeSamples;
 };
 
 #endif // PACKET_H

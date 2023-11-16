@@ -1,23 +1,31 @@
 #ifndef HARDWARE_H
 #define HARDWARE_H
 
-#include "Packet.h"
 #include <string>
 #include <vector>
 #include <array>
+#include "Constant.h"
+#include "Packet.h"
 
 class Hardware {
 public:
-    Hardware(const std::string& uuid, int numMagneticSensors, int numAccelerometerSensors, int numGyroscopeSensors);
+    enum class IntervalTime {
+        MS_1 = 1000,      // 1ms = 1000 microseconds
+        MS_0_5 = 500,     // 0.5ms = 500 microseconds
+        MS_0_33 = 330     // 0.33ms = 330 microseconds
+    };
 
-    Packet generateDataPacket() const;
+    Hardware(std::string& uuid, int numMagneticSensors, int numAccelerometerSensors, int numGyroscopeSensors, IntervalTime interval);
+
+    Packet generateDataPacket() const; 
 
 private:
-    static const int numValuesPerSample = 3; // Each sensor has 3 values: x, y, z
+
     std::string uuid;
-    const int numMagneticSensors;
-    const int numAccelerometerSensors;
-    const int numGyroscopeSensors;
+    int numMagneticSensors;
+    int numAccelerometerSensors;
+    int numGyroscopeSensors;
+    IntervalTime interval;
 
     std::vector<std::array<float, numValuesPerSample>> generateSensorData(int sensorCount) const;
 };

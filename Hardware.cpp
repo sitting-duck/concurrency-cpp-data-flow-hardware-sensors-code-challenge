@@ -2,9 +2,30 @@
 #include <chrono>
 #include <random>
 
-// ...
+Hardware::Hardware(std::string& uuid, int numMagneticSensors, int numAccelerometerSensors, int numGyroscopeSensors, IntervalTime interval) {
+    this->uuid = uuid;
+    this->numMagneticSensors = numMagneticSensors;
+    this->numAccelerometerSensors = numAccelerometerSensors;
+    this->numGyroscopeSensors = numGyroscopeSensors;
+    this->interval = interval;
+}
 
-std::vector<std::array<float, Hardware::numValuesPerSample>> Hardware::generateSensorData(int sensorCount) const {
+Packet Hardware::generateDataPacket() const {
+
+    // Generating a timestamp for the packet
+    auto timestamp = std::chrono::system_clock::now().time_since_epoch().count();
+
+    // generating sensor data
+    auto magneticSamples = generateSensorData(this->numMagneticSensors);
+    auto accelerometerSamples = generateSensorData(this->numAccelerometerSensors);
+    auto gyroscopeSamples = generateSensorData(this->numGyroscopeSensors);
+
+    // Create a Packet with the generated data
+    Packet packet(uuid, timestamp, magneticSamples, accelerometerSamples, gyroscopeSamples);
+    return packet;
+}
+
+std::vector<std::array<float, numValuesPerSample>> Hardware::generateSensorData(int sensorCount) const {
     std::vector<std::array<float, numValuesPerSample>> sensorData;
     sensorData.reserve(sensorCount);
 
