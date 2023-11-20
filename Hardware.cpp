@@ -45,3 +45,29 @@ std::vector<std::array<float, numValuesPerSample>> Hardware::generateSensorData(
     return sensorData;
 }
 
+std::ostream& operator<<(std::ostream& os, const Hardware::IntervalTime& intervalTime) {
+    switch (intervalTime) {
+        case Hardware::IntervalTime::MS_1:
+            os << "1 ms";
+            break;
+        case Hardware::IntervalTime::MS_0_5:
+            os << "0.5 ms";
+            break;
+        case Hardware::IntervalTime::MS_0_33:
+            os << "0.33 ms";
+            break;
+        default:
+            os << "Unknown Interval";
+    }
+    return os;
+}
+
+int Hardware::intervalToInt(Hardware::IntervalTime& intervalTime) {
+    switch (intervalTime) {
+        case Hardware::IntervalTime::MS_1: return 1000;
+        case Hardware::IntervalTime::MS_0_5: return 500;
+        case Hardware::IntervalTime::MS_0_33: return 330;
+        default: return -1;
+    }
+}
+

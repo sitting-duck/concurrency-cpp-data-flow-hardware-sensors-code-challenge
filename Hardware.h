@@ -19,6 +19,8 @@ public:
 
     Packet generateDataPacket() const; 
 
+    static int intervalToInt(Hardware::IntervalTime& intervalTime);
+
 private:
 
     std::string uuid;
@@ -28,6 +30,9 @@ private:
     IntervalTime interval;
 
     std::vector<std::array<float, numValuesPerSample>> generateSensorData(int sensorCount) const;
+    
+    friend std::ostream& operator<<(std::ostream& os, const Hardware::IntervalTime& intervalTime);
+    
 };
 
 #endif // HARDWARE_H

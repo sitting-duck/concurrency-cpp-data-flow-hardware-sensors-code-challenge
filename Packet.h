@@ -1,6 +1,7 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include "Constant.h"
@@ -18,6 +19,8 @@ public:
     const std::vector<std::array<float, numValuesPerSample>>& getMagneticSamples() const;
     const std::vector<std::array<float, numValuesPerSample>>& getAccelerometerSamples() const;
     const std::vector<std::array<float, numValuesPerSample>>& getGyroscopeSamples() const;
+
+    friend std::ostream& operator<<(std::ostream& os, const Packet& packet);
 
 private:
     std::string uuid;

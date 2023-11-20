@@ -10,25 +10,61 @@ void simulateHardwareDevice(std::string& uuid, int magSensors, int accelSensors,
 
     while(true) {
         auto packet = hardware.generateDataPacket();
-        
+        std::cout << "got packet: " << packet << std::endl;
     }
 }
+
+void test(std::string& uuid) {
+    std::cout << "doing a test" << std::endl;
+}
+
+// void test(std::string &) {}
+// void test2(std::string &&) {}
+// void test3(std::string const&) {}
+// void test4(std::string) {}
 
 int main() {
     std::cout << "Hello World" << std::endl;
 
-    // the hardware samples will be sent to the algorithm for proceessing. 
+    std::string s;
+    //test(std::move(s)); // fail
+    //test2(std::move(s)); // ok
+    //test3(std::move(s)); // ok
+    //test4(std::move(s)); // ok
 
-    // an algorithm instance will be processing data for ONE individual magnetometer
-    // a hardware device with multiple magenetometers will need a corresponding number of algorithm instances. 
+    const int numDevices = 10;
+    std::vector<std::thread> threads;
 
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> sensorDis(1, 5);
+    std::uniform_int_distribution<> intervalDis(0, 2); // For three interval types
 
-    // once all the algorithm instances are done processing the sample packet, 
-    // each magnetometer (algorithm instance) will produce one pose
+    for (int i = 0; i < numDevices; ++i) {
+        std::string uuid = "Hardware_" + std::to_string(i);
 
-    // the sample packet with its raw data and its associated pose outputs will be sent to any downstream clients
-    // that have requested data from this particular device.  
+        int magSensors = sensorDis(gen);
+        int accelSensors = sensorDis(gen);
+        int gyroSensors = sensorDis(gen);
+
+        Hardware::IntervalTime interval;
+        switch (intervalDis(gen)) {
+            case 0: interval = Hardware::IntervalTime::MS_1; break;
+            case 1: interval = Hardware::IntervalTime::MS_0_5; break;
+            case 2: interval = Hardware::IntervalTime::MS_0_33; break;
+        }
+        int interval_as_ms = Hardware::intervalToInt(interval);
+
+         std::cout << "mah interval: " << interval << std::endl;
+
+        //threads.emplace_back(simulateHardwareDevice, uuid, magSensors, accelSensors, gyroSensors, interval);
+        //threads.emplace_back(simulateHardwareDevice, uuid, magSensors, accelSensors, gyroSensors, interval_as_ms);
+        threads.emplace_back(test, uuid);
+    }
+
+  //   //for (auto& thread : threads) {
+  //   //    thread.join();
+  //   //}   
 
     return 0;
 }
-
