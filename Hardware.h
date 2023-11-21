@@ -21,6 +21,20 @@ public:
 
     static int intervalToInt(Hardware::IntervalTime& intervalTime);
 
+    std::string getUuid() const;
+    void setUuid(const std::string& newUuid);
+    int getNumMagneticSensors() const;
+    void setNumMagneticSensors(int numSensors);
+    int getNumAccelerometerSensors() const;
+    void setNumAccelerometerSensors(int numSensors);
+    int getNumGyroscopeSensors() const;
+    void setNumGyroscopeSensors(int numSensors);
+
+    Hardware::IntervalTime getInterval() const;
+    int getIntervalAsInt() const;
+
+    void setInterval(Hardware::IntervalTime interval);
+
 private:
 
     std::string uuid;

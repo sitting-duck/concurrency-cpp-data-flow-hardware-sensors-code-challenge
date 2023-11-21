@@ -62,8 +62,44 @@ std::ostream& operator<<(std::ostream& os, const Hardware::IntervalTime& interva
     return os;
 }
 
-int Hardware::intervalToInt(Hardware::IntervalTime& intervalTime) {
-    switch (intervalTime) {
+std::string Hardware::getUuid() const {
+    return uuid;
+}
+
+void Hardware::setUuid(const std::string& newUuid) {
+    uuid = newUuid;
+}
+
+int Hardware::getNumMagneticSensors() const {
+    return numMagneticSensors;
+}
+
+void Hardware::setNumMagneticSensors(int numSensors) {
+    numMagneticSensors = numSensors;
+}
+
+int Hardware::getNumAccelerometerSensors() const {
+    return numAccelerometerSensors;
+}
+
+void Hardware::setNumAccelerometerSensors(int numSensors) {
+    numAccelerometerSensors = numSensors;
+}
+
+int Hardware::getNumGyroscopeSensors() const {
+    return numGyroscopeSensors;
+}
+
+void Hardware::setNumGyroscopeSensors(int numSensors) {
+    numGyroscopeSensors = numSensors;
+}
+
+Hardware::IntervalTime Hardware::getInterval() const {
+    return interval;
+}
+
+int Hardware::getIntervalAsInt() const {
+    switch (this->interval) {
         case Hardware::IntervalTime::MS_1: return 1000;
         case Hardware::IntervalTime::MS_0_5: return 500;
         case Hardware::IntervalTime::MS_0_33: return 330;
@@ -71,3 +107,6 @@ int Hardware::intervalToInt(Hardware::IntervalTime& intervalTime) {
     }
 }
 
+void Hardware::setInterval(Hardware::IntervalTime interval) {
+    this->interval = interval;
+}
