@@ -94,6 +94,10 @@ void Hardware::setNumGyroscopeSensors(int numSensors) {
     numGyroscopeSensors = numSensors;
 }
 
+int Hardware::getNumSensors() const {
+    return numMagneticSensors + numAccelerometerSensors + numGyroscopeSensors;
+}
+
 Hardware::IntervalTime Hardware::getInterval() const {
     return interval;
 }

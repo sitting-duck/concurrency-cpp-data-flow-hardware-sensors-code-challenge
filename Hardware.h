@@ -30,6 +30,8 @@ public:
     int getNumGyroscopeSensors() const;
     void setNumGyroscopeSensors(int numSensors);
 
+    int getNumSensors() const;
+
     Hardware::IntervalTime getInterval() const;
     int getIntervalAsInt() const;
 
