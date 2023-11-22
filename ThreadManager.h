@@ -19,6 +19,7 @@ public:
     // Static member functions
     static void* PacketCreate(void* arg);
     static void* PacketProcess(void* arg);
+    static int calculateProcessingTime(int interval);
 
 private:
     std::vector<Hardware> devices;

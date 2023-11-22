@@ -33,9 +33,15 @@ void ThreadManager::run() {
     // Clean up
     for (auto* poseVector : allPoses) {
         for (auto* pose : *poseVector) {
-            delete pose;  // Delete individual Poses
+            if(pose) {
+                delete pose;  // Delete individual Poses    
+            }
+            
         }
-        delete poseVector;  // Delete the vector itself
+        if(poseVector) {
+            delete poseVector;  // Delete the vector itself    
+        }
+        
     }
 }
 
@@ -76,12 +82,29 @@ void* ThreadManager::PacketCreate(void* arg) {
 void* ThreadManager::PacketProcess(void* args) {
     PacketProcessArgs* arg = static_cast<PacketProcessArgs*>(args);
 
-    usleep(arg->interval);
+    int sleepDuration = ThreadManager::calculateProcessingTime(arg->interval);
+    usleep(sleepDuration);
     std::cout << "\t\tPacket: " << arg->packet.getUUID() << "finished processing." << std::endl;
 
     Pose* pose = new Pose(PoseFactory::createRandomPose());
 
     return pose;
 }
+
+int ThreadManager::calculateProcessingTime(int interval) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::normal_distribution<float> dis(interval, interval / 4.0f); // Adjust the standard deviation as needed
+
+    float generatedValue = dis(gen);
+    float minValue = interval / 2.0f;
+    float maxValue = interval * 2.0f;
+
+    // Manually clamping the value
+    int sleepDuration = static_cast<int>(generatedValue < minValue ? minValue : (generatedValue > maxValue ? maxValue : generatedValue));
+    return sleepDuration;
+}
+
+
 
 
