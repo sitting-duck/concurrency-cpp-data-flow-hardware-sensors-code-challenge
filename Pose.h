@@ -6,7 +6,8 @@
 
 class Pose {
 public:
-    Pose(); // Implement constructor to initialize pose values
+    Pose();
+    Pose(float v1, float v2, float v3, float v4, float v5, float v6, float v7);
 
     friend std::ostream& operator<<(std::ostream& os, const Pose& pose);
 

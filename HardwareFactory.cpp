@@ -6,7 +6,7 @@ std::vector<Hardware> HardwareFactory::createRandomHardwareDevices(int numDevice
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> sensorDis(1, 5);
+    std::uniform_int_distribution<> sensorDis(1, 5);   // create 1 to 5 sensors of each type
     std::uniform_int_distribution<> intervalDis(0, 2); // For three interval types
 
     for (int i = 0; i < numDevices; ++i) {

@@ -1,6 +1,9 @@
 #include "ThreadManager.h"
+#include "PoseFactory.h"
 #include <pthread.h>
 #include <unistd.h>
+#include <random>
+#include "Pose.h"
 
 // Forward declaration of functions
 void* PacketCreate(void* arg);
@@ -10,6 +13,8 @@ ThreadManager::ThreadManager(std::vector<Hardware>& devices) : devices(devices) 
 
 void ThreadManager::run() {
     std::vector<pthread_t> threads;
+    std::vector<std::vector<Pose*>*> allPoses; 
+
     for (auto device : devices) {
         pthread_t thread;
         pthread_create(&thread, nullptr, PacketCreate, &device);
@@ -17,9 +22,20 @@ void ThreadManager::run() {
         threads.push_back(thread);
     }
 
-    // Join threads
+    // Join threads & collect array of Poses from each thread and push them all into a master list
     for (auto& thread : threads) {
-        pthread_join(thread, nullptr);
+        void* retval;
+        pthread_join(thread, &retval);
+        
+        allPoses.push_back(static_cast<std::vector<Pose*>*>(retval));
+    }
+
+    // Clean up
+    for (auto* poseVector : allPoses) {
+        for (auto* pose : *poseVector) {
+            delete pose;  // Delete individual Poses
+        }
+        delete poseVector;  // Delete the vector itself
     }
 }
 
@@ -29,10 +45,10 @@ void* ThreadManager::PacketCreate(void* arg) {
     Hardware* device = static_cast<Hardware*>(arg);
     Packet packet = device->generateDataPacket();
     PacketProcessArgs* args = new PacketProcessArgs(packet, device->getIntervalAsInt());
-    //args.packet = packet;
-    //args.interval = device.getIntervalAsInt();
 
     std::vector<pthread_t> threads;
+    std::vector<Pose*> poses(device->getNumSensors());
+
     for(int i = 0; i < device->getNumSensors(); i++) {
         pthread_t thread;
         pthread_create(&thread, nullptr, PacketProcess, &args);
@@ -40,21 +56,21 @@ void* ThreadManager::PacketCreate(void* arg) {
         threads.push_back(thread);
     }
 
-    // Join threads
-    for (auto& thread : threads) {
-        pthread_join(thread, nullptr);
+    // Join threads and collect Poses
+    for (int i = 0; i < device->getNumSensors(); i++) {
+        void* retval;
+        pthread_join(threads[i], &retval);
+        poses[i] = static_cast<Pose*>(retval);  // Collect Pose pointers
     }
 
-    // std::cout << "before delet" << std::endl;
+    // Clean up
     if(args) {
         delete args;    
     }
-    
-    // std::cout << "after delet" << std::endl;
 
-    std::cout << "\tgonna create the Pose here" << std::endl;
-    return 0;
-
+    // Instead of cleaning up Pose pointers here, return the vector of poses to be collected upstream
+    std::vector<Pose*>* posesPtr = new std::vector<Pose*>(std::move(poses));
+    return posesPtr;
 }
 
 void* ThreadManager::PacketProcess(void* args) {
@@ -62,6 +78,10 @@ void* ThreadManager::PacketProcess(void* args) {
 
     usleep(arg->interval);
     std::cout << "\t\tPacket: " << arg->packet.getUUID() << "finished processing." << std::endl;
-    return 0;
 
+    Pose* pose = new Pose(PoseFactory::createRandomPose());
+
+    return pose;
 }
+
+
