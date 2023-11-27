@@ -11,6 +11,10 @@ std::string Packet::getUUID() const {
     return uuid;
 }
 
+void Packet::setUuid(std::string uuid) {
+  this->uuid = uuid;
+}
+
 long long Packet::getTimestamp() const {
     return timestamp;
 }
@@ -28,11 +32,11 @@ const std::vector<std::array<float, numValuesPerSample>>& Packet::getGyroscopeSa
 }
 
 std::ostream& operator<<(std::ostream& os, const Packet& packet) {
-  os << "Packet UUID: " << packet.uuid << "\n";
-    os << "Timestamp: " << packet.timestamp << "\n";
+  os << "\tPacket UUID: " << packet.uuid << "\n";
+    os << "\tTimestamp: " << packet.timestamp << "\n";
 
     // Print magnetic samples
-    os << "Magnetic Samples:\n";
+    os << "\tMagnetic Samples:\n";
     for (const auto& sample : packet.magneticSamples) {
         for (const auto& value : sample) {
             os << value << " ";
@@ -41,7 +45,7 @@ std::ostream& operator<<(std::ostream& os, const Packet& packet) {
     }
 
     // Print accelerometer samples
-    os << "Accelerometer Samples:\n";
+    os << "\tAccelerometer Samples:\n";
     for (const auto& sample : packet.accelerometerSamples) {
         for (const auto& value : sample) {
             os << value << " ";
@@ -50,7 +54,7 @@ std::ostream& operator<<(std::ostream& os, const Packet& packet) {
     }
 
     // Print gyroscope samples
-    os << "Gyroscope Samples:\n";
+    os << "\tGyroscope Samples:\n";
     for (const auto& sample : packet.gyroscopeSamples) {
         for (const auto& value : sample) {
             os << value << " ";

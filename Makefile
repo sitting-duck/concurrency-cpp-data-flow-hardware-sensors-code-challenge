@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -Wall -std=c++11 -pthread
 
 # Add HardwareFactory.o to the object files list
-OBJ = main.o Hardware.o Packet.o HardwareFactory.o ThreadManager.o Pose.o PoseFactory.o
+OBJ = main.o Hardware.o Packet.o HardwareFactory.o ThreadManager.o Pose.o PoseFactory.o Time.o
 
 all: main
 
@@ -29,6 +29,9 @@ Pose.o: Pose.cpp Pose.h
 
 PoseFactory.o: PoseFactory.cpp PoseFactory.h
 	$(CXX) $(CXXFLAGS) -c PoseFactory.cpp	
+
+Time.o: Time.cpp Time.h
+	$(CXX) $(CXXFLAGS) -c Time.cpp
 
 clean:
 	rm -f *.o main

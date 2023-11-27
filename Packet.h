@@ -15,6 +15,7 @@ public:
 
     // Getters
     std::string getUUID() const;
+    void setUuid(std::string uuid);
     long long getTimestamp() const;
     const std::vector<std::array<float, numValuesPerSample>>& getMagneticSamples() const;
     const std::vector<std::array<float, numValuesPerSample>>& getAccelerometerSamples() const;

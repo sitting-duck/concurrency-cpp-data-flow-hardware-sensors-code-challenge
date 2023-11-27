@@ -1,4 +1,5 @@
 #include "Hardware.h"
+#include "Time.h"
 #include <chrono>
 #include <random>
 
@@ -12,16 +13,19 @@ Hardware::Hardware(std::string& uuid, int numMagneticSensors, int numAcceleromet
 
 Packet Hardware::generateDataPacket() const {
 
-    // Generating a timestamp for the packet
-    auto timestamp = std::chrono::system_clock::now().time_since_epoch().count();
+    auto timestamp = Time::getTimeStamp();
+    auto timeStampStr = Time::getTimeStampString();
 
     // generating sensor data
     auto magneticSamples = generateSensorData(this->numMagneticSensors);
     auto accelerometerSamples = generateSensorData(this->numAccelerometerSensors);
     auto gyroscopeSamples = generateSensorData(this->numGyroscopeSensors);
 
+    std::string packetUuid = "p" + this->uuid + Time::generateUUID();
+
     // Create a Packet with the generated data
-    Packet packet(uuid, timestamp, magneticSamples, accelerometerSamples, gyroscopeSamples);
+    Packet packet(packetUuid, timestamp, magneticSamples, accelerometerSamples, gyroscopeSamples);
+    packet.setUuid(packetUuid);
     return packet;
 }
 

@@ -2,8 +2,10 @@
 #include "PoseFactory.h"
 #include <pthread.h>
 #include <unistd.h>
-#include <random>
+
 #include "Pose.h"
+#include "Time.h"
+#include "Packet.h"
 
 // Forward declaration of functions
 void* PacketCreate(void* arg);
@@ -12,6 +14,8 @@ void* PacketProcess(void* arg);
 ThreadManager::ThreadManager(std::vector<Hardware>& devices) : devices(devices) {}
 
 void ThreadManager::run() {
+    std::cout << "run()" << std::endl;
+
     std::vector<pthread_t> threads;
     std::vector<std::vector<Pose*>*> allPoses; 
 
@@ -31,6 +35,7 @@ void ThreadManager::run() {
     }
 
     // Clean up
+    std::cout << "run(): clean up" << std::endl;
     for (auto* poseVector : allPoses) {
         for (auto* pose : *poseVector) {
             if(pose) {
@@ -46,10 +51,13 @@ void ThreadManager::run() {
 }
 
 void* ThreadManager::PacketCreate(void* arg) {
+    std::cout << "PacketCreate()" << std::endl;
+
     // Implementation for PacketCreate
     // Create a thread for each sensor in the device
     Hardware* device = static_cast<Hardware*>(arg);
     Packet packet = device->generateDataPacket();
+
     PacketProcessArgs* args = new PacketProcessArgs(packet, device->getIntervalAsInt());
 
     std::vector<pthread_t> threads;
@@ -57,7 +65,7 @@ void* ThreadManager::PacketCreate(void* arg) {
 
     for(int i = 0; i < device->getNumSensors(); i++) {
         pthread_t thread;
-        pthread_create(&thread, nullptr, PacketProcess, &args);
+        pthread_create(&thread, nullptr, PacketProcess, args);
         std::cout << "\tcreating child thread for sensor" << i << std::endl;
         threads.push_back(thread);
     }
@@ -70,6 +78,7 @@ void* ThreadManager::PacketCreate(void* arg) {
     }
 
     // Clean up
+    std::cout << "PacketCreate(): Clean up" << std::endl;
     if(args) {
         delete args;    
     }
@@ -80,30 +89,19 @@ void* ThreadManager::PacketCreate(void* arg) {
 }
 
 void* ThreadManager::PacketProcess(void* args) {
+    std::cout << "PacketProcess()" << std::endl;
+
     PacketProcessArgs* arg = static_cast<PacketProcessArgs*>(args);
 
-    int sleepDuration = ThreadManager::calculateProcessingTime(arg->interval);
+    int sleepDuration = Time::calculateProcessingTime(arg->interval);
     usleep(sleepDuration);
-    std::cout << "\t\tPacket: " << arg->packet.getUUID() << "finished processing." << std::endl;
+    std::cout << "\t\tPacket: " << arg->packet.getUUID() << " finished processing." << std::endl;
 
     Pose* pose = new Pose(PoseFactory::createRandomPose());
 
     return pose;
 }
 
-int ThreadManager::calculateProcessingTime(int interval) {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::normal_distribution<float> dis(interval, interval / 4.0f); // Adjust the standard deviation as needed
-
-    float generatedValue = dis(gen);
-    float minValue = interval / 2.0f;
-    float maxValue = interval * 2.0f;
-
-    // Manually clamping the value
-    int sleepDuration = static_cast<int>(generatedValue < minValue ? minValue : (generatedValue > maxValue ? maxValue : generatedValue));
-    return sleepDuration;
-}
 
 
 
