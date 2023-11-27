@@ -21,7 +21,7 @@ Packet Hardware::generateDataPacket() const {
     auto accelerometerSamples = generateSensorData(this->numAccelerometerSensors);
     auto gyroscopeSamples = generateSensorData(this->numGyroscopeSensors);
 
-    std::string packetUuid = "p" + this->uuid + Time::generateUUID();
+    std::string packetUuid = "p" + this->uuid + "pp" + Time::generateUUID();
 
     // Create a Packet with the generated data
     Packet packet(packetUuid, timestamp, magneticSamples, accelerometerSamples, gyroscopeSamples);

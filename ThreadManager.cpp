@@ -53,7 +53,6 @@ void ThreadManager::run() {
 void* ThreadManager::PacketCreate(void* arg) {
     std::cout << "PacketCreate()" << std::endl;
 
-    // Implementation for PacketCreate
     // Create a thread for each sensor in the device
     Hardware* device = static_cast<Hardware*>(arg);
     Packet packet = device->generateDataPacket();
