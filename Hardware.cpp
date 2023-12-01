@@ -66,7 +66,7 @@ std::ostream& operator<<(std::ostream& os, const Hardware::IntervalTime& interva
     return os;
 }
 
-std::string Hardware::getUuid() const {
+std::string Hardware::getUuid() {
     return uuid;
 }
 

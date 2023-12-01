@@ -21,7 +21,7 @@ public:
 
     static int intervalToInt(Hardware::IntervalTime& intervalTime);
 
-    std::string getUuid() const;
+    std::string getUuid();
     void setUuid(const std::string& newUuid);
     int getNumMagneticSensors() const;
     void setNumMagneticSensors(int numSensors);
