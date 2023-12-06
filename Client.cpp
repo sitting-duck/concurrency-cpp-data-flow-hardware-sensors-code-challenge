@@ -22,3 +22,12 @@ bool Client::isSubscribedTo(std::string uuid) {
     }
     return false; // No device with the matching UUID found
 }
+
+std::ostream& operator<<(std::ostream& os, const Client& client) {
+    os << "Client Subscriptions: [";
+    for (const auto& device : client.devices) {
+        os << device.getUuid() << " ";
+    }
+    os << "]";
+    return os;
+}

@@ -3,6 +3,7 @@
 
 #include "Packet.h"
 #include "Pose.h"
+#include "Hardware.h"
 
 class Client {
 public:
@@ -11,6 +12,8 @@ public:
 
     void subscribeToHardware(Hardware hardware);
     bool isSubscribedTo(std::string uuid);
+
+    friend std::ostream& operator<<(std::ostream& os, const Client& client);
 
 private:
 	std::vector<Hardware> devices;

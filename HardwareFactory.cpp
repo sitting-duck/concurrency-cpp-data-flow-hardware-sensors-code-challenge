@@ -10,7 +10,7 @@ std::vector<Hardware> HardwareFactory::createRandomHardwareDevices(int numDevice
     std::uniform_int_distribution<> intervalDis(0, 2); // For three interval types
 
     for (int i = 0; i < numDevices; ++i) {
-        std::string uuid = "Hardware_" + std::to_string(i);
+        std::string uuid = "h_" + std::to_string(i) + "_h";
         int magSensors = sensorDis(gen);
         int accelSensors = sensorDis(gen);
         int gyroSensors = sensorDis(gen);

@@ -5,7 +5,7 @@
 
 class PoseFactory {
 public:
-    static Pose createRandomPose();
+    static Pose createRandomPose(std::string packetUuid);
 };
 
 #endif // POSEFACTORY_H

@@ -21,7 +21,7 @@ Packet Hardware::generateDataPacket() const {
     auto accelerometerSamples = generateSensorData(this->numAccelerometerSensors);
     auto gyroscopeSamples = generateSensorData(this->numGyroscopeSensors);
 
-    std::string packetUuid = "p" + this->uuid + "pp" + Time::generateUUID();
+    std::string packetUuid = "p_" + this->uuid + "_p" + Time::generateUUID();
 
     // Create a Packet with the generated data
     Packet packet(packetUuid, timestamp, magneticSamples, accelerometerSamples, gyroscopeSamples);
@@ -66,7 +66,7 @@ std::ostream& operator<<(std::ostream& os, const Hardware::IntervalTime& interva
     return os;
 }
 
-std::string Hardware::getUuid() {
+std::string Hardware::getUuid() const {
     return uuid;
 }
 
